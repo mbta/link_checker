@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Crawl do
     {command_opts, _, _} = OptionParser.parse(user_opts, strict: strict_params)
     Application.ensure_all_started(:httpoison)
     opts = Keyword.merge(command_opts, [base_url: url])
-    {:ok, _pid} = Crawler.Supervisor.start_link([])
+    {:ok, _pid} = Crawler.Supervisor.start_link()
     Crawler.Dispatcher.process_links(opts)
   end
 end

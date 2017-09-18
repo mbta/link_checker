@@ -1,13 +1,15 @@
 defmodule Crawler.Supervisor do
   alias Crawler.Link.Registry
+  use Supervisor
 
-  def start_link(opts) do
-    Supervisor.start_link(__MODULE__, opts)
+  def start_link do
+    Supervisor.start_link(__MODULE__, [])
   end
 
+  @impl true
   def init(_opts) do
-    children = [Registry]
+    children = [worker(Registry, [[]])]
 
-    Supervisor.init(children, strategy: :one_for_one)
+    supervise(children, strategy: :one_for_one)
   end
 end
