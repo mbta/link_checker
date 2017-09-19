@@ -4,6 +4,8 @@ defmodule Mix.Tasks.Crawl do
   """
   use Mix.Task
 
+  def main(argv), do: run(argv)
+
   def run(argv) do
     [url | user_opts] = argv
     strict_params = [max_depth: :integer, num_workers: :integer]
