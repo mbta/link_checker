@@ -6,13 +6,13 @@ defmodule Crawler.Printer do
   """
 
   def print_info(time, max_depth, []) do
-    IO.puts("\n#{IO.ANSI.green()}PASSED SUCCESSFULLY#{IO.ANSI.white()}")
+    IO.puts("\n#{IO.ANSI.green()}PASSED SUCCESSFULLY#{IO.ANSI.default_color()}")
     print_time(time)
     print_unchecked_links(max_depth)
   end
   def print_info(time, max_depth, invalid_links) do
     print_time(time)
-    IO.puts("\n#{IO.ANSI.red()}Finished with #{Enum.count(invalid_links)} errors #{IO.ANSI.white()}")
+    IO.puts("\n#{IO.ANSI.red()}Finished with #{Enum.count(invalid_links)} errors #{IO.ANSI.default_color()}")
     IO.puts("")
     print_invalid_links(invalid_links)
     print_unchecked_links(max_depth)
@@ -32,11 +32,11 @@ defmodule Crawler.Printer do
     IO.write(IO.ANSI.red())
     IO.puts("\nFAILED #{link}")
     IO.puts("REASON: #{reason}")
-    IO.write(IO.ANSI.white())
+    IO.write(IO.ANSI.default_color())
   end
 
   def print_success do
-    Task.async(fn -> IO.write("#{IO.ANSI.green()}.#{IO.ANSI.white()}") end)
+    Task.async(fn -> IO.write("#{IO.ANSI.green()}.#{IO.ANSI.default_color()}") end)
   end
 
   defp print_time(time) do
