@@ -48,6 +48,7 @@ defmodule Crawler.Link.Checker do
     |> Floki.find("a")
     |> Floki.attribute("href")
     |> Enum.filter(&internal_link?(&1, base_url))
+    |> Enum.map(&strip_anchors/1)
     |> Enum.map(&Registry.add_link(link_path(&1, base_url), parent, depth))
   end
 
@@ -62,5 +63,10 @@ defmodule Crawler.Link.Checker do
 
   defp link_path(url, base_url) do
     String.trim(url, base_url)
+  end
+
+  defp strip_anchors(url) do
+    [trimmed_url | _anchors ] = String.split(url, "#")
+    trimmed_url
   end
 end
