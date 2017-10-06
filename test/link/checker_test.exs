@@ -7,7 +7,8 @@ defmodule Link.CheckerTest do
     {"/", nil, 0},
     {"/success_url", "/", 1},
     {"/pdf", "/", 1},
-    {"/error_url", "/", 1}
+    {"/error_url", "/", 1},
+    {"/anchor_url", "/", 1}
   ]
 
   setup do
@@ -39,7 +40,12 @@ defmodule Link.CheckerTest do
 
     test "Non HTML pages are not crawled for links" do
       verify_link("/pdf", "http://mock", 2)
-      refute "/example" in Registry.unchecked_links(3)
+      refute "/example" in Registry.unchecked_links(5)
+    end
+
+    test "Links with anchors are not registered as unique links" do
+      verify_link("/anchor_url", "http://mock", 2)
+      refute "/anchor_url#with-anchor" in Registry.unchecked_links(3)
     end
   end
 end

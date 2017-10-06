@@ -9,12 +9,19 @@ defmodule Crawler.HTTPClient.MockClient do
     }
     {:ok, response}
   end
-
   def get("http://mock/pdf", _opts) do
     response = %HTTPoison.Response{
       body: "<div><a href=\"/example\"></a></div>",
       status_code: 200,
       headers: [{"content-type", "file/pdf"}]
+    }
+    {:ok, response}
+  end
+  def get("http://mock/anchor_url", _opts) do
+    response = %HTTPoison.Response{
+      body: "<div><a href=\"/anchor_url#with-anchor\"></a></div>",
+      status_code: 200,
+      headers: [{"content-type", "text/html"}]
     }
     {:ok, response}
   end
