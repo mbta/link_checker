@@ -40,7 +40,7 @@ defmodule Link.CheckerTest do
 
     test "Non HTML pages are not crawled for links" do
       verify_link("/pdf", "http://mock", 2)
-      refute "/example" in Registry.unchecked_links(5)
+      refute "/example" in Registry.unchecked_links(3)
     end
 
     test "Links with anchors are not registered as unique links" do
