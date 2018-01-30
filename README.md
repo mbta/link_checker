@@ -1,5 +1,5 @@
 #  Link Checker
-Crawls a website searching for invalid links.
+Crawls a website searching for invalid links (do not include trailing slash "/" after `<base_url>').
 
 ```bash
 mix crawl <base_url>
