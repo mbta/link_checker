@@ -7,12 +7,27 @@ defmodule Mix.Tasks.Crawl do
   def main(argv), do: run(argv)
 
   def run(argv) do
-    [url | user_opts] = argv
-    strict_params = [max_depth: :integer, num_workers: :integer]
-    {command_opts, _, _} = OptionParser.parse(user_opts, strict: strict_params)
     Application.ensure_all_started(:httpoison)
-    opts = Keyword.merge(command_opts, [base_url: url])
     {:ok, _pid} = Crawler.Supervisor.start_link()
-    Crawler.Dispatcher.process_links(opts)
+
+    argv
+    |> parse_arguments()
+    |> Crawler.Dispatcher.process_links()
   end
+
+  defp parse_arguments(argv) do
+    with {url, user_opts} <- from_argv(argv),
+         {command_opts, _, _} <-
+           OptionParser.parse(user_opts, strict: [max_depth: :integer, num_workers: :integer]) do
+      if is_nil(url) do
+        command_opts
+      else
+        Keyword.merge(command_opts, base_url: url)
+      end
+    end
+  end
+
+  defp from_argv([]), do: {nil, []}
+  defp from_argv([url]), do: {url, []}
+  defp from_argv([url | user_opts]), do: {url, user_opts}
 end
