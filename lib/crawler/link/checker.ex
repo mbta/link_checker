@@ -1,5 +1,4 @@
 defmodule Crawler.Link.Checker do
-
   @moduledoc """
   Checks Links to determine if they are valid or not. Adds links
   from valid urls to the registry for processing.
@@ -11,14 +10,21 @@ defmodule Crawler.Link.Checker do
   def verify_link(:done, _base_url, _depth) do
     :ok
   end
+
   def verify_link(link, base_url, depth) do
-    url = base_url <> link
+    url = URI.merge(base_url, link)
     client = Application.get_env(:crawler, :http_client, PoisonClient)
+
     case apply(client, :get, [url, [recv_timeout: 15_000]]) do
       {:ok, %HTTPoison.Response{status_code: code} = response}
-        when code in 200..399 -> handle_success(link, response, depth, base_url)
-      {:ok, %HTTPoison.Response{status_code: code}} -> handle_error(link, code)
-      {:error, %HTTPoison.Error{reason: reason}}  -> handle_error(link, reason)
+      when code in 200..399 ->
+        handle_success(link, response, depth, base_url)
+
+      {:ok, %HTTPoison.Response{status_code: code}} ->
+        handle_error(link, code)
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        handle_error(link, reason)
     end
   end
 
@@ -30,6 +36,7 @@ defmodule Crawler.Link.Checker do
 
   defp add_page_links(response, parent, depth, base_url) do
     content_type = get_content_type(response)
+
     if String.match?(content_type, ~r/text\/html/) do
       do_add_page_links(response.body, parent, depth, base_url)
     else
@@ -66,7 +73,7 @@ defmodule Crawler.Link.Checker do
   end
 
   defp strip_anchors(url) do
-    [trimmed_url | _anchors ] = String.split(url, "#")
+    [trimmed_url | _anchors] = String.split(url, "#")
     trimmed_url
   end
 end
