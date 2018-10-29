@@ -16,13 +16,16 @@ defmodule Crawler.Dispatcher do
   defp do_process_links(opts) do
     Registry.reset_dropped()
     task_opts = [timeout: 20_000, max_concurrency: opts[:workers]]
+
     for depth <- 0..opts[:max_depth] do
       verify = fn link -> Checker.verify_link(link, opts[:base_url], depth) end
+
       depth
       |> Registry.unchecked_links()
       |> Task.async_stream(verify, task_opts)
       |> Enum.map(& &1)
     end
+
     Registry.invalid_links()
   end
 
