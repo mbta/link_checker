@@ -18,7 +18,7 @@ defmodule Mix.Tasks.Crawl do
   defp parse_arguments(argv) do
     with {url, user_opts} <- from_argv(argv),
          {command_opts, _, _} <-
-           OptionParser.parse(user_opts, strict: [max_depth: :integer, num_workers: :integer]) do
+           OptionParser.parse(user_opts, strict: [max_depth: :integer, workers: :integer]) do
       if is_nil(url) do
         command_opts
       else
