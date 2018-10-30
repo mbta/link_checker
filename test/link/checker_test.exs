@@ -13,9 +13,11 @@ defmodule Link.CheckerTest do
 
   setup do
     {:ok, registry} = start_supervised(Crawler.Link.Registry)
+
     for {link, parent, depth} <- @initial_links do
       Registry.add_link(link, parent, depth)
     end
+
     %{registry: registry}
   end
 
