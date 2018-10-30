@@ -12,19 +12,19 @@ defmodule Crawler.Link.Checker do
   end
 
   def verify_link(link, base_url, depth) do
-    url = URI.merge(base_url, link)
-    client = Application.get_env(:crawler, :http_client, PoisonClient)
+    with url <- URI.merge(base_url, URI.encode(link)),
+         client <- Application.get_env(:crawler, :http_client, PoisonClient) do
+      case apply(client, :get, [url, [recv_timeout: 15_000]]) do
+        {:ok, %HTTPoison.Response{status_code: code} = response}
+        when code in 200..399 ->
+          handle_success(link, response, depth, base_url)
 
-    case apply(client, :get, [url, [recv_timeout: 15_000]]) do
-      {:ok, %HTTPoison.Response{status_code: code} = response}
-      when code in 200..399 ->
-        handle_success(link, response, depth, base_url)
+        {:ok, %HTTPoison.Response{status_code: code}} ->
+          handle_error(link, code)
 
-      {:ok, %HTTPoison.Response{status_code: code}} ->
-        handle_error(link, code)
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        handle_error(link, reason)
+        {:error, %HTTPoison.Error{reason: reason}} ->
+          handle_error(link, reason)
+      end
     end
   end
 
