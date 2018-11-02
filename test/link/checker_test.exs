@@ -8,7 +8,9 @@ defmodule Link.CheckerTest do
     {"/success_url", "/", 1},
     {"/pdf", "/", 1},
     {"/error_url", "/", 1},
-    {"/anchor_url", "/", 1}
+    {"/anchor_url", "/", 1},
+    {"/special characters", "/", 1},
+    {"/special%20characters", "/", 1}
   ]
 
   setup do
@@ -32,6 +34,20 @@ defmodule Link.CheckerTest do
     test "links on successful link are added to processing list" do
       verify_link("/success_url", "http://mock", 2)
       assert "/example" in Registry.unchecked_links(3)
+    end
+
+    test "encodes special characters" do
+      verify_link("/special characters", "http://mock", 2)
+      invalid_urls = Registry.invalid_links() |> Enum.map(&elem(&1, 0))
+      refute "/special characters" in invalid_urls
+      refute "/special characters" in Registry.unchecked_links(2)
+    end
+
+    test "does not double-encode special characters" do
+      verify_link("/special%20characters", "http://mock", 2)
+      invalid_urls = Registry.invalid_links() |> Enum.map(&elem(&1, 0))
+      refute "/special%20characters" in invalid_urls
+      refute "/special%20characters" in Registry.unchecked_links(2)
     end
 
     test "unsuccessful link is marked with an error" do

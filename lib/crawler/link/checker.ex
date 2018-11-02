@@ -12,7 +12,7 @@ defmodule Crawler.Link.Checker do
   end
 
   def verify_link(link, base_url, depth) do
-    url = URI.merge(base_url, URI.encode(link))
+    url = URI.merge(base_url, link |> URI.decode() |> URI.encode())
     client = Application.get_env(:crawler, :http_client, PoisonClient)
 
     case apply(client, :get, [url, [recv_timeout: 15_000]]) do
