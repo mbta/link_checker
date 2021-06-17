@@ -3,8 +3,8 @@ defmodule Crawler.Mixfile do
 
   def project do
     [app: :crawler,
-     version: "0.1.0",
-     elixir: "~> 1.4",
+     version: "0.2.0",
+     elixir: "~> 1.12",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
@@ -34,7 +34,7 @@ defmodule Crawler.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:httpoison, "~> 0.12"},
-     {:floki, "~> 0.12.0"}]
+    [{:httpoison, "~> 1.8"},
+     {:floki, "~> 0.31"}]
   end
 end

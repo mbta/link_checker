@@ -52,6 +52,7 @@ defmodule Crawler.Link.Checker do
 
   defp do_add_page_links(body, parent, depth, base_url) do
     body
+    |> Floki.parse_document!()
     |> Floki.find("a")
     |> Floki.attribute("href")
     |> Enum.filter(&internal_link?(&1, base_url))
