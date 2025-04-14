@@ -30,7 +30,7 @@ defmodule Crawler.Printer do
 
   def do_print_error(link, reason) do
     IO.write(IO.ANSI.red())
-    IO.puts("\nFAILED #{link}")
+    IO.puts("\nFAILED #{inspect(link)}")
     IO.puts("REASON: #{reason}")
     IO.write(IO.ANSI.default_color())
   end
@@ -48,9 +48,9 @@ defmodule Crawler.Printer do
   defp print_invalid_links(links) do
     IO.puts("Invalid Links:")
     for {_url, link} <- links do
-      IO.puts("\nURL: #{link.url}")
+      IO.puts("\nURL: #{inspect(link.url)}")
       IO.puts("Reason: #{inspect(elem(link.result, 1))}")
-      IO.puts("Parent: #{link.parent}")
+      IO.puts("Parent: #{inspect(link.parent)}")
       IO.puts("Depth: #{link.depth}")
     end
   end
