@@ -12,19 +12,21 @@ defmodule Crawler.Link.Checker do
   end
 
   def verify_link(link, base_url, depth) do
-    url = URI.merge(base_url, URI.encode(link))
+    trimmed_link = String.trim(link)
+    url = URI.merge(base_url, URI.encode(trimmed_link))
+
     client = Application.get_env(:crawler, :http_client, PoisonClient)
 
     case apply(client, :get, [url, [recv_timeout: 15_000]]) do
       {:ok, %HTTPoison.Response{status_code: code} = response}
       when code in 200..399 ->
-        handle_success(link, response, depth, base_url)
+        handle_success(trimmed_link, response, depth, base_url)
 
       {:ok, %HTTPoison.Response{status_code: code}} ->
-        handle_error(link, code)
+        handle_error(trimmed_link, code)
 
       {:error, %HTTPoison.Error{reason: reason}} ->
-        handle_error(link, reason)
+        handle_error(trimmed_link, reason)
     end
   end
 

@@ -34,6 +34,11 @@ defmodule Link.CheckerTest do
       assert "/example" in Registry.unchecked_links(3)
     end
 
+    test "trailing spaces in links are trimmed" do
+      verify_link("/success_url ", "http://mock", 2)
+      assert "/example" in Registry.unchecked_links(3)
+    end
+
     test "unsuccessful link is marked with an error" do
       verify_link("/error_url", "http://mock", 2)
       invalid_urls = Registry.invalid_links() |> Enum.map(&elem(&1, 0))
