@@ -2,13 +2,15 @@ defmodule Crawler.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :crawler,
-     version: "0.2.0",
-     elixir: "~> 1.12",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps(),
-     escript: escript()]
+    [
+      app: :crawler,
+      version: "0.2.0",
+      elixir: "~> 1.18",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      escript: escript()
+    ]
   end
 
   # Configuration for the OTP application
@@ -17,7 +19,6 @@ defmodule Crawler.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     [extra_applications: [:logger]]
-
   end
 
   def escript do
@@ -34,7 +35,9 @@ defmodule Crawler.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:httpoison, "~> 1.8"},
-     {:floki, "~> 0.31"}]
+    [
+      {:httpoison, "~> 2.0"},
+      {:floki, "~> 0.37"}
+    ]
   end
 end
