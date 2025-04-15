@@ -6,6 +6,7 @@ defmodule Mix.Tasks.Crawl do
 
   def main(argv), do: run(argv)
 
+  @shortdoc "Crawl the site given"
   def run(argv) do
     Application.ensure_all_started(:httpoison)
     {:ok, _pid} = Crawler.Supervisor.start_link()
