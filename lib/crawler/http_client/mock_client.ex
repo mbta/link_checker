@@ -13,6 +13,16 @@ defmodule Crawler.HTTPClient.MockClient do
     {:ok, response}
   end
 
+  def get("http://mock/spacy_success_url", _opts) do
+    response = %HTTPoison.Response{
+      body: "<div><a href=\"/example-with-space \"></a></div>",
+      status_code: 200,
+      headers: [{"content-type", "text/html"}]
+    }
+
+    {:ok, response}
+  end
+
   def get("http://mock/pdf", _opts) do
     response = %HTTPoison.Response{
       body: "<div><a href=\"/example\"></a></div>",
