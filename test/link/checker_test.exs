@@ -6,6 +6,7 @@ defmodule Link.CheckerTest do
   @initial_links [
     {"/", nil, 0},
     {"/success_url", "/", 1},
+    {"/spacy_success_url", "/", 1},
     {"/pdf", "/", 1},
     {"/error_url", "/", 1},
     {"/anchor_url", "/", 1}
@@ -34,9 +35,9 @@ defmodule Link.CheckerTest do
       assert "/example" in Registry.unchecked_links(3)
     end
 
-    test "trailing spaces in links are trimmed" do
-      verify_link("/success_url ", "http://mock", 2)
-      assert "/example" in Registry.unchecked_links(3)
+    test "spaces on links are trimmed before being added to processing list" do
+      verify_link("/spacy_success_url", "http://mock", 2)
+      assert "/example-with-space" in Registry.unchecked_links(3)
     end
 
     test "unsuccessful link is marked with an error" do
